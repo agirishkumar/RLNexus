@@ -1,0 +1,25 @@
+[project]
+name = "rlnexus"
+version = "0.1.0"
+description = "RLNexus: A comprehensive Python library for Reinforcement Learning experimentation and learning."
+authors = [
+    {name = "Girish",email = "adari.girishkumar@gmail.com"}
+]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy (>=2.2.4,<3.0.0)",
+    "gymnasium (>=1.1.1,<2.0.0)",
+    "torch (>=2.6.0,<3.0.0)"
+]
+
+[tool.poetry]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+mkdocs = "^1.6.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
