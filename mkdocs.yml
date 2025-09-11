@@ -1,0 +1,44 @@
+site_name: RLNexus
+site_description: "A Reinforcement Learning library from scratch."
+repo_url: https://github.com/your-username/rlnexus # TODO: Change this
+edit_uri: ""
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light vs dark mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - toc.integrate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_root_heading: yes
+            show_source: yes
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Core Concepts:
+    - The Autograd Engine: autograd.md
+    - RL Abstractions: core_concepts.md
+  - Environments: environments.md
+  - API Reference:
+    - rlnexus.linalg: api/linalg.md
+    - rlnexus.core: api/core.md
+    - rlnexus.algorithms: api/algorithms.md
+    - rlnexus.environments: api/environments.md
