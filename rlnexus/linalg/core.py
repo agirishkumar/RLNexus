@@ -25,9 +25,41 @@ class Tensor:
                 self.grad = np.zeros_like(self.data)
             if other.grad is None:
                 other.grad = np.zeros_like(other.data)
-            
-            self.grad += out.grad
-            other.grad += out.grad if other.data.shape == out.data.shape else np.sum(out.grad, axis=0)
+
+            # Handle broadcasting for gradients
+            def unbroadcast_add(grad, target_shape):
+                """Unbroadcast gradient for addition operation."""
+                if grad.shape == target_shape:
+                    return grad
+
+                # If target is scalar, sum all elements
+                if target_shape == () or target_shape == (1,):
+                    return np.array(np.sum(grad))
+
+                # Handle common broadcasting cases
+                if len(grad.shape) == len(target_shape):
+                    # Same number of dimensions, check if we need to sum along certain axes
+                    result = grad.copy()
+                    for i, (grad_dim, target_dim) in enumerate(zip(grad.shape, target_shape)):
+                        if target_dim == 1 and grad_dim > 1:
+                            result = np.sum(result, axis=i, keepdims=True)
+                    return result.reshape(target_shape)
+                else:
+                    # Different number of dimensions - sum over extra dimensions
+                    result = grad
+                    while len(result.shape) > len(target_shape):
+                        result = np.sum(result, axis=0)
+
+                    # If still not matching, try to reshape
+                    if result.shape != target_shape:
+                        # Try summing along last dimension if needed
+                        if len(result.shape) == len(target_shape) + 1:
+                            result = np.sum(result, axis=-1)
+
+                    return result.reshape(target_shape) if result.shape != target_shape else result
+
+            self.grad += unbroadcast_add(out.grad, self.data.shape)
+            other.grad += unbroadcast_add(out.grad, other.data.shape)
 
         out._backward = _backward
 
@@ -172,17 +204,72 @@ class Tensor:
         out = self.sum(axis=axis, keepdims=keepdims) * (1.0 / np.prod(self.data.shape))
         return out
 
+    def softmax(self, axis=-1):
+        """
+        Compute softmax along the specified axis.
+        """
+        # Subtract max for numerical stability
+        x_max = self.data.max(axis=axis, keepdims=True)
+        exp_x = (self - x_max).exp()
+        sum_exp_x = exp_x.sum(axis=axis, keepdims=True)
+        return exp_x / sum_exp_x
+
+    def exp(self):
+        """
+        Compute element-wise exponential.
+        """
+        out = Tensor(np.exp(self.data), (self,), 'exp')
+
+        def _backward():
+            if self.grad is None:
+                self.grad = np.zeros_like(self.data)
+            self.grad += out.data * out.grad
+        out._backward = _backward
+
+        return out
+
+    def log(self):
+        """
+        Compute element-wise natural logarithm.
+        """
+        out = Tensor(np.log(self.data), (self,), 'log')
+
+        def _backward():
+            if self.grad is None:
+                self.grad = np.zeros_like(self.data)
+            self.grad += (1.0 / self.data) * out.grad
+        out._backward = _backward
+
+        return out
+
     def backward(self):
-        # Topological sort of the graph
+        # Iterative topological sort of the graph (avoids recursion depth issues)
         topo = []
         visited = set()
-        def build_topo(v):
-            if v not in visited:
+        temp_visited = set()
+        stack = [self]
+
+        while stack:
+            v = stack[-1]
+
+            if v in visited:
+                stack.pop()
+                continue
+
+            if v in temp_visited:
+                # All children have been visited, add to topological order
+                stack.pop()
                 visited.add(v)
-                for child in v._prev:
-                    build_topo(child)
                 topo.append(v)
-        build_topo(self)
+                continue
+
+            # Mark as temporarily visited
+            temp_visited.add(v)
+
+            # Add all children to stack
+            for child in v._prev:
+                if child not in visited and child not in temp_visited:
+                    stack.append(child)
 
         # Initialize gradient of the final tensor if it's not already set
         if self.grad is None:
