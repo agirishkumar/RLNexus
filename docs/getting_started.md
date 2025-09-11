@@ -80,3 +80,25 @@ print("\\nTraining finished.")
 ```
 
 This complete, runnable example can be found in `examples/train_dqn_cartpole.py`.
+
+## Alternative: Planning-Based Approaches
+
+If you have access to a model of the environment (transition probabilities and rewards), you can use **planning algorithms** instead of reinforcement learning. These compute optimal policies analytically without needing to interact with the environment.
+
+For example, with our `GridWorld` environment:
+
+```python
+from rlnexus.environments.grid_world import GridWorld
+from rlnexus.planning.dp import value_iteration, extract_policy_from_value_function
+
+# Create model-based environment
+env = GridWorld(size=4)
+
+# Find optimal policy using Value Iteration
+V_optimal = value_iteration(env)
+policy_optimal = extract_policy_from_value_function(V_optimal, env)
+
+print("Planning found the optimal policy analytically!")
+```
+
+Planning algorithms are covered in detail in the [Planning & Dynamic Programming](planning.md) section.
