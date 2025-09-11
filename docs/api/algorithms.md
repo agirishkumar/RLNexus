@@ -13,3 +13,7 @@ This module contains the implementations of various reinforcement learning algor
 ## Deep Q-Network (DQN)
 
 ::: rlnexus.algorithms.dqn
+
+## REINFORCE (Policy Gradients)
+
+::: rlnexus.algorithms.reinforce

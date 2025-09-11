@@ -81,6 +81,43 @@ print("\\nTraining finished.")
 
 This complete, runnable example can be found in `examples/train_dqn_cartpole.py`.
 
+## Alternative: Policy Gradient Approaches
+
+Instead of value-based methods like DQN, you can use **policy gradient methods** that directly optimize the policy. These are particularly useful for continuous action spaces or when you want stochastic policies.
+
+```python
+from rlnexus.environments.cartpole import CartPole
+from rlnexus.algorithms.reinforce import REINFORCEAgent
+from rlnexus.linalg.nn import Sequential, Linear, ReLU, SGD
+
+# Create environment
+env = CartPole()
+
+# Create policy network
+policy_network = Sequential(
+    Linear(4, 64),
+    ReLU(),
+    Linear(64, 2)  # Outputs action logits
+)
+
+# Create agent
+optimizer = SGD(policy_network.parameters(), lr=0.01)
+agent = REINFORCEAgent(env, policy_network, optimizer)
+
+# Training loop
+for episode in range(300):
+    state = env.reset()
+    done = False
+    
+    while not done:
+        action = agent.act(state)
+        next_state, reward, done, _ = env.step(action)
+        agent.learn(state, action, reward, next_state, done)
+        state = next_state
+```
+
+This example can be found in `examples/train_reinforce.py`. Policy gradient methods are covered in detail in the [Policy Gradient Methods](policy_gradients.md) section.
+
 ## Alternative: Planning-Based Approaches
 
 If you have access to a model of the environment (transition probabilities and rewards), you can use **planning algorithms** instead of reinforcement learning. These compute optimal policies analytically without needing to interact with the environment.

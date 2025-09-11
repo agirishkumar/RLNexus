@@ -21,3 +21,7 @@ This module contains the fundamental abstractions for the reinforcement learning
 ## Replay Buffer
 
 ::: rlnexus.core.replay_buffer
+
+## MDP (Markov Decision Processes)
+
+::: rlnexus.core.mdp

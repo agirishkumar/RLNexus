@@ -37,6 +37,7 @@ nav:
     - The Autograd Engine: autograd.md
     - RL Abstractions: core_concepts.md
   - Planning & Dynamic Programming: planning.md
+  - Policy Gradient Methods: policy_gradients.md
   - Environments: environments.md
   - API Reference:
     - rlnexus.linalg: api/linalg.md
