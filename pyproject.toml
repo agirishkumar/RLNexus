@@ -9,9 +9,7 @@ license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "numpy (>=2.2.4,<3.0.0)",
-    "gymnasium (>=1.1.1,<2.0.0)",
-    "torch (>=2.6.0,<3.0.0)"
+    "numpy~=1.26"
 ]
 
 [tool.poetry]
@@ -19,7 +17,14 @@ dependencies = [
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 mkdocs = "^1.6.1"
+mkdocs-material = "^9.6.19"
+mkdocstrings = {extras = ["python"], version = "^0.30.0"}
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
