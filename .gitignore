@@ -28,3 +28,6 @@ site/
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# Project Planning
+plan.md
