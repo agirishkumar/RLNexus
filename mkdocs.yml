@@ -38,10 +38,13 @@ nav:
     - RL Abstractions: core_concepts.md
   - Planning & Dynamic Programming: planning.md
   - Policy Gradient Methods: policy_gradients.md
+  - Actor-Critic Methods: actor_critic.md
+  - Search Algorithms: search_algorithms.md
   - Environments: environments.md
   - API Reference:
     - rlnexus.linalg: api/linalg.md
     - rlnexus.core: api/core.md
     - rlnexus.algorithms: api/algorithms.md
     - rlnexus.planning: api/planning.md
+    - rlnexus.search: api/search.md
     - rlnexus.environments: api/environments.md
