@@ -17,3 +17,7 @@ This module contains the implementations of various reinforcement learning algor
 ## REINFORCE (Policy Gradients)
 
 ::: rlnexus.algorithms.reinforce
+
+## Actor-Critic
+
+::: rlnexus.algorithms.actor_critic
